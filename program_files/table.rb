@@ -2,61 +2,72 @@
 # Table class_
 # Is used to build and handle tables formed like
 # ":class :name :meaning :type :struct :diapazone :format"
-
 class Table
   attr_accessor :lines
-  class << self
-    
+  def initialize(...)
+    @lines = []
+    lines_add_get_keys_vals
+    add(...)
   end
 
-  def initialize(*args)
-    @lines = []
-    args.each do |line|
-      if line.respond_to?(:each_pair)
-        @lines << line
-      else
-        raise ArgumentError, "Not a line of table: #{line.inspect}"
-      end
+  ##
+  # Singleton method get_keys_vals for @lines
+  # Returns arr of keys and arr of values
+  def lines_add_get_keys_vals
+    @lines.define_singleton_method(:get_keys_vals) do
+      keys, vals = [], []
+      each { |line| keys << line.keys
+                    vals << line.values }
+      [keys, vals].each { |arr| arr.flatten! && arr.uniq! }
     end
   end
-  
+
+  ##
+  # Adds args to @lines
   def add(*args)
-    args.each { |arg| @lines << arg }
+    counter = ''
+    args.each do |arg| 
+      if arg.respond_to?(:each_pair)
+        @lines << arg 
+      else
+        counter += arg.inspect + ' '
+      end
+    end
+    counter.empty? || raise(ArgumentError, "Not lines of table: #{counter}")
   end
 
   ##
   # Returns pretty formatted table.
   def to_s(vertical_border: '|', horizontal_border: '-')
-    keys = []
-    vals = []
-    @lines.each do |line|
-      line.each_pair do |key, val| 
-        keys << key unless keys.include?(key)
-        vals << val unless vals.include?(val)
-      end
-    end
+    keys, vals = @lines.get_keys_vals
     border_width = vertical_border.chomp.length
     border_cover = horizontal_border
-    cell_length_keys = keys.max_by { |key| key.length }.length + 2 * border_width
-    cell_length_vals = vals.max_by { |val| val.to_s.length }.length + 2 * border_width
-    cell_length = [cell_length_vals, cell_length_keys].max
+    cell_length = [keys, vals].flatten\
+      .max_by { |sth| sth.to_s.length }.to_s.length
     str = vertical_border +
-                  keys.map { |key|
-                    key.to_s.center(key.length + 2 * border_width)\
-                      .center(cell_length, border_cover)
-                  }.join(vertical_border) +
-                  vertical_border
+          keys.map { |key|
+            key.to_s.center(key.length + 2)\
+              .center(cell_length, border_cover)
+          }.join(vertical_border) +
+          vertical_border
 
     line_length = str.length
 
     str += empty_line(length:             cell_length,
+                      times:              keys.length,
                       left_border:    vertical_border,
                       center_border:  vertical_border,
                       right_border:   vertical_border,
-                      cover:        horizontal_border,
-                      times:              keys.length)
+                      cover:        horizontal_border)
+
     @lines.each_with_index do |line, i|
-      str += tabled_line(line: line, keys: keys, length: cell_length)
+      str += tabled_line( line:                     line, 
+                          keys:                     keys, 
+                          length:            cell_length,
+                          cover:       horizontal_border,
+                          left_border:   vertical_border,
+                          center_border: vertical_border,
+                          right_border:  vertical_border)
     end
     str
   end
@@ -68,15 +79,14 @@ class Table
                   right_border:  "|",
                   cover:         "-",
                   length:         10)
-    keys.empty? && raise(ArgumentError.new('Empty param :keys in tabled_line'))
+    keys.empty? && !line.empty? &&
+      raise(ArgumentError.new('Empty param :keys in tabled_line'))
     str = "\n"
     str += left_border
     keys.each_with_index do |key, index|
-      if line.key?(key)
-        str += line[key].to_s.center(length)
-      else
-        str += "".ljust(length, cover)
-      end
+      str += line.key?(key)\
+        ? line[key].to_s.center(length) # 'if'
+        : "".ljust(length, cover)       # 'else'
       index == keys.length || str += center_border 
     end
     str += ""
@@ -100,4 +110,9 @@ class Table
     str += ""
   end
 end
-puts Table.new({a: 2, b: 3, c: 'Alexandro'}, {k: 3})
+
+a = Table.new({ 'Book':   'Parrot Crown', 
+                'Descr':  'A humorous parrot', 
+                'Author': 'Alexandro Volta'}, 
+              {k: 3})
+puts a
