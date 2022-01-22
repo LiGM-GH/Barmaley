@@ -1,7 +1,6 @@
 ##
 # Table class_
-# Is used to build and handle tables formed like
-# ":class :name :meaning :type :struct :diapazone :format"
+# Is used to build and handle tables 
 class Table
   attr_accessor :lines
   def initialize(...)
@@ -42,32 +41,40 @@ class Table
     keys, vals = @lines.get_keys_vals
     border_width = vertical_border.chomp.length
     border_cover = horizontal_border
-    cell_length = [keys, vals].flatten\
-      .max_by { |sth| sth.to_s.length }.to_s.length
-    str = vertical_border +
-          keys.map { |key|
-            key.to_s.center(key.length + 2)\
-              .center(cell_length, border_cover)
-          }.join(vertical_border) +
-          vertical_border
+    
+    # Finding lenth of columns
+    cell_length = ( # max length of elem in table
+      [keys, vals].flatten.max_by { |sth| sth.to_s.length }.to_s.length
+    )
+    
+    str = ( # table's hat
+      vertical_border + keys.map { |key|
+        key.to_s.center(key.length + 2)\
+          .center(cell_length, border_cover)
+      }.join(vertical_border) + vertical_border
+    )
 
     line_length = str.length
 
-    str += empty_line(length:             cell_length,
-                      times:              keys.length,
-                      left_border:    vertical_border,
-                      center_border:  vertical_border,
-                      right_border:   vertical_border,
-                      cover:        horizontal_border)
+    str += empty_line( # Line description
+      length:             cell_length,  # Some params
+      times:              keys.length,  #
+      left_border:    vertical_border,  #
+      center_border:  vertical_border,  #
+      right_border:   vertical_border,  #
+      cover:        horizontal_border   # ended here
+    )
 
-    @lines.each_with_index do |line, i|
-      str += tabled_line( line:                     line, 
-                          keys:                     keys, 
-                          length:            cell_length,
-                          cover:       horizontal_border,
-                          left_border:   vertical_border,
-                          center_border: vertical_border,
-                          right_border:  vertical_border)
+    @lines.each do |line|
+      str += tabled_line( # Line description
+        line:                     line, # Some params
+        keys:                     keys, #
+        length:            cell_length, #
+        cover:       horizontal_border, #
+        left_border:   vertical_border, #
+        center_border: vertical_border, #
+        right_border:  vertical_border  # ended here
+      )
     end
     str
   end
@@ -84,9 +91,10 @@ class Table
     str = "\n"
     str += left_border
     keys.each_with_index do |key, index|
-      str += line.key?(key)\
-        ? line[key].to_s.center(length) # 'if'
-        : "".ljust(length, cover)       # 'else'
+      str +=  if line.key?(key) 
+              then line[key].to_s.center(length) 
+              else "".ljust(length, cover)
+              end
       index == keys.length || str += center_border 
     end
     str += ""
@@ -100,10 +108,8 @@ class Table
                   times:           1)
     str = "\n"
     str += left_border
-    (times - 1).times do
-      str += "".ljust(length, cover)
-      str += center_border
-    end
+    (times - 1).times { str += "".ljust(length, cover)
+                        str += center_border           }
     str += "".ljust(length, cover)
     
     str += right_border
@@ -113,6 +119,6 @@ end
 
 a = Table.new({ 'Book':   'Parrot Crown', 
                 'Descr':  'A humorous parrot', 
-                'Author': 'Alexandro Volta'}, 
+                'Author': 'Alexandro Volta'    }, 
               {k: 3})
 puts a
