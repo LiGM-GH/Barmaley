@@ -5,4 +5,6 @@
 # Started 21 Jan 2021.
 # Barmaley is to make data tables
 
-# First let's setup class Table in program_files/table.rb
+# 21 jan 2021 - Making class_ Table in program_files/table.rb
+# 24 jan 2021 - Got    class_ Table in program_files/table.rb
+#               Making class_ Parser in program_files/parser.rb

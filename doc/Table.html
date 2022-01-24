@@ -76,6 +76,7 @@
     <li ><a href="#method-i-add">#add</a>
     <li ><a href="#method-i-empty_line">#empty_line</a>
     <li ><a href="#method-i-lines_add_get_keys_vals">#lines_add_get_keys_vals</a>
+    <li ><a href="#method-i-standard_empty_line">#standard_empty_line</a>
     <li ><a href="#method-i-tabled_line">#tabled_line</a>
     <li ><a href="#method-i-to_s">#to_s</a>
   </ul>
@@ -91,7 +92,7 @@
 
   <section class="description">
     
-<p><a href="Table.html"><code>Table</code></a> class_ Is used to build and handle tables formed like “:class :name :meaning :type :struct :diapazone :format”</p>
+<p>Class <a href="Table.html"><code>Table</code></a> Is used to build and handle tables</p>
 
   </section>
 
@@ -133,7 +134,7 @@
           
 
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File program_files/table.rb, line 7</span>
+            <pre><span class="ruby-comment"># File program_files/table.rb, line 6</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-operator">...</span>)
   <span class="ruby-ivar">@lines</span> = []
   <span class="ruby-identifier">lines_add_get_keys_vals</span>
@@ -163,7 +164,7 @@
           <p>Adds args to @lines</p>
 
           <div class="method-source-code" id="add-source">
-            <pre><span class="ruby-comment"># File program_files/table.rb, line 27</span>
+            <pre><span class="ruby-comment"># File program_files/table.rb, line 26</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
   <span class="ruby-identifier">counter</span> = <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-identifier">args</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">arg</span><span class="ruby-operator">|</span> 
@@ -184,7 +185,7 @@
       <div id="method-i-empty_line" class="method-detail ">
         <div class="method-heading">
           <span class="method-name">empty_line</span><span
-            class="method-args">( left_border: &#39;|&#39;, center_border: &#39;|&#39;, right_border: &#39;|&#39;, cover: &#39;-&#39;, length: 10, times: 1)</span>
+            class="method-args">( left_border: &#39;|&#39;, center_border: &#39;+&#39;, right_border: &#39;|&#39;, cover: &#39; &#39;, length: 10, times: 1)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
 
@@ -192,23 +193,21 @@
           
 
           <div class="method-source-code" id="empty_line-source">
-            <pre><span class="ruby-comment"># File program_files/table.rb, line 95</span>
+            <pre><span class="ruby-comment"># File program_files/table.rb, line 116</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">empty_line</span>( <span class="ruby-value">left_border:</span>   <span class="ruby-string">&#39;|&#39;</span>,
-                <span class="ruby-value">center_border:</span> <span class="ruby-string">&#39;|&#39;</span>,
+                <span class="ruby-value">center_border:</span> <span class="ruby-string">&#39;+&#39;</span>,
                 <span class="ruby-value">right_border:</span>  <span class="ruby-string">&#39;|&#39;</span>,
-                <span class="ruby-value">cover:</span>         <span class="ruby-string">&#39;-&#39;</span>,
+                <span class="ruby-value">cover:</span>         <span class="ruby-string">&#39; &#39;</span>,
                 <span class="ruby-value">length:</span>         <span class="ruby-value">10</span>,
                 <span class="ruby-value">times:</span>           <span class="ruby-value">1</span>)
   <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;\n&quot;</span>
   <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">left_border</span>
-  (<span class="ruby-identifier">times</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>).<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span>
-    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&quot;</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-identifier">length</span>, <span class="ruby-identifier">cover</span>)
-    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">center_border</span>
-  <span class="ruby-keyword">end</span>
+  (<span class="ruby-identifier">times</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>).<span class="ruby-identifier">times</span> { <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&quot;</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-identifier">length</span>, <span class="ruby-identifier">cover</span>)
+                      <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">center_border</span>           }
   <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&quot;</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-identifier">length</span>, <span class="ruby-identifier">cover</span>)
   
   <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">right_border</span>
-  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">str</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
         </div>
@@ -227,7 +226,7 @@
           <p>Singleton method get_keys_vals for @lines Returns arr of keys and arr of values</p>
 
           <div class="method-source-code" id="lines_add_get_keys_vals-source">
-            <pre><span class="ruby-comment"># File program_files/table.rb, line 16</span>
+            <pre><span class="ruby-comment"># File program_files/table.rb, line 15</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">lines_add_get_keys_vals</span>
   <span class="ruby-ivar">@lines</span>.<span class="ruby-identifier">define_singleton_method</span>(<span class="ruby-value">:get_keys_vals</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">keys</span>, <span class="ruby-identifier">vals</span> = [], []
@@ -242,10 +241,41 @@
 
       </div>
 
+      <div id="method-i-standard_empty_line" class="method-detail ">
+        <div class="method-heading">
+          <span class="method-name">standard_empty_line</span><span
+            class="method-args">(cell_length: 10, columns_number: 1)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+
+        <div class="method-description">
+          
+
+          <div class="method-source-code" id="standard_empty_line-source">
+            <pre><span class="ruby-comment"># File program_files/table.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">standard_empty_line</span>(<span class="ruby-value">cell_length:</span> <span class="ruby-value">10</span>, <span class="ruby-value">columns_number:</span> <span class="ruby-value">1</span>)
+  <span class="ruby-identifier">vertical_border</span>   = <span class="ruby-string">&#39;|&#39;</span>
+  <span class="ruby-identifier">horizontal_border</span> = <span class="ruby-string">&#39;-&#39;</span>
+  <span class="ruby-identifier">angle</span>             = <span class="ruby-string">&#39;+&#39;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">empty_line</span>( <span class="ruby-comment"># Line description</span>
+    <span class="ruby-value">length:</span>             <span class="ruby-identifier">cell_length</span>,  <span class="ruby-comment"># Some params</span>
+    <span class="ruby-value">times:</span>           <span class="ruby-identifier">columns_number</span>,  <span class="ruby-comment">#</span>
+    <span class="ruby-value">left_border:</span>              <span class="ruby-identifier">angle</span>,  <span class="ruby-comment">#</span>
+    <span class="ruby-value">center_border:</span>            <span class="ruby-identifier">angle</span>,  <span class="ruby-comment">#</span>
+    <span class="ruby-value">right_border:</span>             <span class="ruby-identifier">angle</span>,  <span class="ruby-comment">#</span>
+    <span class="ruby-value">cover:</span>        <span class="ruby-identifier">horizontal_border</span>   <span class="ruby-comment"># ended here</span>
+  )
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
       <div id="method-i-tabled_line" class="method-detail ">
         <div class="method-heading">
           <span class="method-name">tabled_line</span><span
-            class="method-args">(line: {}, keys: [], left_border: &quot;|&quot;, center_border: &quot;|&quot;, right_border: &quot;|&quot;, cover: &quot;-&quot;, length: 10)</span>
+            class="method-args">(line: {}, keys: [], left_border: &quot;|&quot;, center_border: &quot;|&quot;, right_border: &quot;|&quot;, cover: &quot; &quot;, length: 10)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
 
@@ -253,22 +283,23 @@
           
 
           <div class="method-source-code" id="tabled_line-source">
-            <pre><span class="ruby-comment"># File program_files/table.rb, line 75</span>
+            <pre><span class="ruby-comment"># File program_files/table.rb, line 95</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">tabled_line</span>(<span class="ruby-value">line:</span>           {},
                 <span class="ruby-value">keys:</span>           [],
                 <span class="ruby-value">left_border:</span>   <span class="ruby-string">&quot;|&quot;</span>,
                 <span class="ruby-value">center_border:</span> <span class="ruby-string">&quot;|&quot;</span>,
                 <span class="ruby-value">right_border:</span>  <span class="ruby-string">&quot;|&quot;</span>,
-                <span class="ruby-value">cover:</span>         <span class="ruby-string">&quot;-&quot;</span>,
+                <span class="ruby-value">cover:</span>         <span class="ruby-string">&quot; &quot;</span>,
                 <span class="ruby-value">length:</span>         <span class="ruby-value">10</span>)
   <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">line</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span>
     <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;Empty param :keys in tabled_line&#39;</span>))
   <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;\n&quot;</span>
   <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">left_border</span>
   <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>)\
-      <span class="ruby-operator">?</span> <span class="ruby-identifier">line</span>[<span class="ruby-identifier">key</span>].<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">center</span>(<span class="ruby-identifier">length</span>) <span class="ruby-comment"># &#39;if&#39;</span>
-      <span class="ruby-operator">:</span> <span class="ruby-string">&quot;&quot;</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-identifier">length</span>, <span class="ruby-identifier">cover</span>)       <span class="ruby-comment"># &#39;else&#39;</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span>  <span class="ruby-keyword">if</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">key?</span>(<span class="ruby-identifier">key</span>) 
+            <span class="ruby-keyword">then</span> <span class="ruby-identifier">line</span>[<span class="ruby-identifier">key</span>].<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">center</span>(<span class="ruby-identifier">length</span>) 
+            <span class="ruby-keyword">else</span> <span class="ruby-string">&quot;&quot;</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-identifier">length</span>, <span class="ruby-identifier">cover</span>)
+            <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">index</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">center_border</span> 
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&quot;</span>
@@ -282,7 +313,7 @@
       <div id="method-i-to_s" class="method-detail ">
         <div class="method-heading">
           <span class="method-name">to_s</span><span
-            class="method-args">(vertical_border: &#39;|&#39;, horizontal_border: &#39;-&#39;)</span>
+            class="method-args">(vertical_border: &#39;|&#39;, horizontal_border: &#39;-&#39;, angle: &#39;+&#39;)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
 
@@ -290,38 +321,46 @@
           <p>Returns pretty formatted table.</p>
 
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File program_files/table.rb, line 41</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_s</span>(<span class="ruby-value">vertical_border:</span> <span class="ruby-string">&#39;|&#39;</span>, <span class="ruby-value">horizontal_border:</span> <span class="ruby-string">&#39;-&#39;</span>)
+            <pre><span class="ruby-comment"># File program_files/table.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_s</span>(<span class="ruby-value">vertical_border:</span> <span class="ruby-string">&#39;|&#39;</span>, <span class="ruby-value">horizontal_border:</span> <span class="ruby-string">&#39;-&#39;</span>, <span class="ruby-value">angle:</span> <span class="ruby-string">&#39;+&#39;</span>)
   <span class="ruby-identifier">keys</span>, <span class="ruby-identifier">vals</span> = <span class="ruby-ivar">@lines</span>.<span class="ruby-identifier">get_keys_vals</span>
   <span class="ruby-identifier">border_width</span> = <span class="ruby-identifier">vertical_border</span>.<span class="ruby-identifier">chomp</span>.<span class="ruby-identifier">length</span>
   <span class="ruby-identifier">border_cover</span> = <span class="ruby-identifier">horizontal_border</span>
-  <span class="ruby-identifier">cell_length</span> = [<span class="ruby-identifier">keys</span>, <span class="ruby-identifier">vals</span>].<span class="ruby-identifier">flatten</span>\
-    .<span class="ruby-identifier">max_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sth</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sth</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">length</span> }.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">length</span>
-  <span class="ruby-identifier">str</span> = <span class="ruby-identifier">vertical_border</span> <span class="ruby-operator">+</span>
-        <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">center</span>(<span class="ruby-identifier">key</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>)\
-            .<span class="ruby-identifier">center</span>(<span class="ruby-identifier">cell_length</span>, <span class="ruby-identifier">border_cover</span>)
-        }.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">vertical_border</span>) <span class="ruby-operator">+</span>
-        <span class="ruby-identifier">vertical_border</span>
+  <span class="ruby-identifier">str</span> = <span class="ruby-string">&#39;&#39;</span>
+
+  <span class="ruby-comment"># Finding lenth of columns</span>
+  <span class="ruby-identifier">cell_length</span> = ( <span class="ruby-comment"># max length of elem in table</span>
+    [<span class="ruby-identifier">keys</span>, <span class="ruby-identifier">vals</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">max_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sth</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sth</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">length</span> }.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">length</span>
+  )
+
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">standard_empty_line</span>( <span class="ruby-value">cell_length:</span>    <span class="ruby-identifier">cell_length</span>, 
+                              <span class="ruby-value">columns_number:</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">length</span>)
+
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> ( <span class="ruby-comment"># table&#39;s hat</span>
+    <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">vertical_border</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">center</span>(<span class="ruby-identifier">key</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>)\
+        .<span class="ruby-identifier">center</span>(<span class="ruby-identifier">cell_length</span>)
+    }.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">vertical_border</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">vertical_border</span>
+  )
 
   <span class="ruby-identifier">line_length</span> = <span class="ruby-identifier">str</span>.<span class="ruby-identifier">length</span>
 
-  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">empty_line</span>(<span class="ruby-value">length:</span>             <span class="ruby-identifier">cell_length</span>,
-                    <span class="ruby-value">times:</span>              <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">length</span>,
-                    <span class="ruby-value">left_border:</span>    <span class="ruby-identifier">vertical_border</span>,
-                    <span class="ruby-value">center_border:</span>  <span class="ruby-identifier">vertical_border</span>,
-                    <span class="ruby-value">right_border:</span>   <span class="ruby-identifier">vertical_border</span>,
-                    <span class="ruby-value">cover:</span>        <span class="ruby-identifier">horizontal_border</span>)
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">standard_empty_line</span>( <span class="ruby-value">cell_length:</span>    <span class="ruby-identifier">cell_length</span>, 
+                              <span class="ruby-value">columns_number:</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">length</span>)
 
-  <span class="ruby-ivar">@lines</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">tabled_line</span>( <span class="ruby-value">line:</span>                     <span class="ruby-identifier">line</span>, 
-                        <span class="ruby-value">keys:</span>                     <span class="ruby-identifier">keys</span>, 
-                        <span class="ruby-value">length:</span>            <span class="ruby-identifier">cell_length</span>,
-                        <span class="ruby-value">cover:</span>       <span class="ruby-identifier">horizontal_border</span>,
-                        <span class="ruby-value">left_border:</span>   <span class="ruby-identifier">vertical_border</span>,
-                        <span class="ruby-value">center_border:</span> <span class="ruby-identifier">vertical_border</span>,
-                        <span class="ruby-value">right_border:</span>  <span class="ruby-identifier">vertical_border</span>)
+  <span class="ruby-ivar">@lines</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">tabled_line</span>( <span class="ruby-comment"># Line description</span>
+      <span class="ruby-value">line:</span>                     <span class="ruby-identifier">line</span>, <span class="ruby-comment"># Some params</span>
+      <span class="ruby-value">keys:</span>                     <span class="ruby-identifier">keys</span>, <span class="ruby-comment">#</span>
+      <span class="ruby-value">length:</span>            <span class="ruby-identifier">cell_length</span>, <span class="ruby-comment">#</span>
+      <span class="ruby-value">left_border:</span>   <span class="ruby-identifier">vertical_border</span>, <span class="ruby-comment">#</span>
+      <span class="ruby-value">center_border:</span> <span class="ruby-identifier">vertical_border</span>, <span class="ruby-comment">#</span>
+      <span class="ruby-value">right_border:</span>  <span class="ruby-identifier">vertical_border</span>  <span class="ruby-comment"># ended here</span>
+    )
   <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">standard_empty_line</span>( <span class="ruby-value">cell_length:</span>    <span class="ruby-identifier">cell_length</span>, 
+                              <span class="ruby-value">columns_number:</span> <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">length</span>)
+
   <span class="ruby-identifier">str</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
