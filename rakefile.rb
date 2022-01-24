@@ -9,7 +9,7 @@ task :table do
 end
 
 task :test_parser => :parser do
-  puts Parser.new("#{__dir__}/program_files/tests/test.txt").get_hashes
+  puts Parser.new("#{__dir__}/tests/test.txt").get_hashes
 end
 
 task :test_table => :table do
@@ -19,9 +19,9 @@ task :test_table => :table do
                   {k: 3})
 end
 
-task :parsed_to_table => [:table, :parser] do
+task :parse_file_to_table => [:table, :parser] do
   table = Table.new()
-  Parser.new("#{__dir__}/program_files/tests/test.txt")\
+  Parser.new("#{__dir__}/tests/test.txt")\
   .get_hashes.each do |line|
     table.add(line)
   end

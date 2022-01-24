@@ -5,6 +5,6 @@
 # Started 21 Jan 2021.
 # Barmaley is to make data tables
 
-# 21 jan 2021 - Making class_ Table in program_files/table.rb
-# 24 jan 2021 - Got    class_ Table in program_files/table.rb
-#               Making class_ Parser in program_files/parser.rb
+# 21 jan 2021 - Making class_ Table in program_files/table.rb   - LiGM-GH
+# 24 jan 2021 - Got    class_ Table in program_files/table.rb   - LiGM-GH
+#               Making class_ Parser in program_files/parser.rb - LiGM-GH
