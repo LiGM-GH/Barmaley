@@ -6,6 +6,7 @@ def get_rbs(*args, from: '.')
   File.directory?("#{from}")            || # from is directory else
     raise(ArgumentError.new, "from: #{from} - Not a directory - \n"\
                                    "#{__dir__}/#{from}")
+  counter = []
   args.each do |arg|
     if     File.exist?("#{from}/#{arg}") || 
            File.exist?("#{from}/#{arg}.rb")
@@ -14,7 +15,8 @@ def get_rbs(*args, from: '.')
            File.exist?("#{__dir__}/#{from}/#{arg}")
       require_relative "#{__dir__}/#{from}/#{arg}"
     else 
-      raise("Could not find #{arg}; #{__dir__}/#{from}/#{arg}")
+      counter << arg
     end
   end
+  counter.empty? || raise("Could not find #{counter.join(", ")}")
 end

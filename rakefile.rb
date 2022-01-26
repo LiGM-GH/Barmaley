@@ -21,8 +21,7 @@ end
 
 task :parse_file_to_table => [:table, :parser] do
   table = Table.new()
-  Parser.new("#{__dir__}/tests/test.txt")\
-  .get_hashes.each do |line|
+  Parser.new(ARGV[1]).hashes.each do |line|
     table.add(line)
   end
   puts table

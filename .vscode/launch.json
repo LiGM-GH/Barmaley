@@ -1,0 +1,33 @@
+{
+  // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
+  // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
+  // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "name": "Debug Local File",
+      "type": "Ruby",
+      "request": "launch",
+      "program": "${workspaceRoot}/main.rb"
+    },
+    {
+      "name": "Test::Unit - open test file",
+      "type": "Ruby",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",           
+      "program": "${file}",
+      "includes": ["test", "lib"]
+    },
+    {
+      "name": "Listen for rdebug-ide",
+      "type": "Ruby",
+      "request": "attach",
+      "program": "${file}",
+      "cwd": "${workspaceRoot}",
+      "remoteHost": "127.0.0.1",
+      "remotePort": "1234",
+      "remoteWorkspaceRoot": "${workspaceRoot}"
+    }
+  ]
+}

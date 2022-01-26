@@ -1,28 +1,60 @@
-##
-# Class Table
-# Is used to build and handle tables 
-class Table
-  attr_accessor :lines
-  def initialize(...)
-    @lines = []
-    lines_add_get_keys_vals
-    add(...)
-  end
-
-  ##
-  # Singleton method get_keys_vals for @lines
-  # Returns arr of keys and arr of values
-  def lines_add_get_keys_vals
-    @lines.define_singleton_method(:get_keys_vals) do
-      keys, vals = [], []
-      each { |line| keys << line.keys
-                    vals << line.values }
-      [keys, vals].each { |arr| arr.flatten! && arr.uniq! }
+module TableUtils
+  def table_line( line:           {},
+                  keys:           [],
+                  left_border:   "|",
+                  center_border: "|",
+                  right_border:  "|",
+                  cover:         " ",
+                  length:           )
+    keys.empty? && !line.empty? &&
+      raise(ArgumentError.new('Empty param :keys in tabled_line'))
+    str = ''
+    str += left_border
+    keys.each_with_index do |key, index|
+      if line.key?(key)
+        str += line[key].to_s.center(length) 
+      else 
+        str += "".ljust(length, cover)
+      end
+      index == keys.length || str += center_border 
     end
+    str += "\n"
   end
 
-  ##
-  # Adds args to @lines
+  def empty_line( left_border:   '|',
+                  center_border: '+',
+                  right_border:  '|',
+                  cover:         ' ',
+                  length:         10,
+                  times:           1)
+    str = left_border
+    (times - 1).times do
+      str += "".ljust(length, cover) + 
+        center_border
+    end
+    str += "".ljust(length, cover) + right_border + "\n"
+  end
+end
+
+class Table
+  attr_accessor :lines, :keys, :vals, :opts
+  include TableUtils
+  def initialize(*args, **opts)
+    @lines  = []
+    @opts   = opts
+    add(*args)
+  end
+
+  def get_keys_vals
+    @keys = []
+    @vals = []
+    @lines.each { |line|  @keys << line.keys
+                          @vals << line.values }
+    @keys.flatten! && @keys.uniq!
+    @vals.flatten! && @vals.uniq!
+    [@keys, @vals]
+  end
+
   def add(*args)
     counter = ''
     args.each do |arg| 
@@ -35,97 +67,61 @@ class Table
     counter.empty? || raise(ArgumentError, "Not lines of table: #{counter}")
   end
 
-  ##
-  # Returns pretty formatted table.
-  def to_s(vertical_border: '|', horizontal_border: '-', angle: '+')
-    keys, vals = @lines.get_keys_vals
-    border_width = vertical_border.chomp.length
-    border_cover = horizontal_border
-    str = ''
-
-    # Finding lenth of columns
-    cell_length = ( # max length of elem in table
-      [keys, vals].flatten.max_by { |sth| sth.to_s.length }.to_s.length
-    )
-
-    str += standard_empty_line( cell_length:    cell_length, 
-                                columns_number: keys.length)
-
-    str += ( # table's hat
-      "\n" + vertical_border + keys.map { |key|
-        key.to_s.center(key.length + 2)\
-          .center(cell_length)
-      }.join(vertical_border) + vertical_border
-    )
-
-    line_length = str.length
-
-    str += standard_empty_line( cell_length:    cell_length, 
-                                columns_number: keys.length)
-
-    @lines.each do |line|
-      str += tabled_line( # Line description
-        line:                     line, # Some params
-        keys:                     keys, #
-        length:            cell_length, #
-        left_border:   vertical_border, #
-        center_border: vertical_border, #
-        right_border:  vertical_border  # ended here
-      )
-    end
-    str += standard_empty_line( cell_length:    cell_length, 
-                                columns_number: keys.length)
-
-    str
+  def set_cell_length
+    defined?(@keys) || get_keys_vals
+    opts[:cell_length] = [@keys, @vals].flatten\
+      .max_by { |sth| sth.to_s.length }.to_s.length
   end
 
-  def standard_empty_line(cell_length: 10, columns_number: 1)
-    vertical_border   = '|'
-    horizontal_border = '-'
-    angle             = '+'
-    return empty_line( # Line description
-      length:             cell_length,  # Some params
-      times:           columns_number,  #
-      left_border:              angle,  #
-      center_border:            angle,  #
-      right_border:             angle,  #
-      cover:        horizontal_border   # ended here
-    )
-  end
-  def tabled_line(line:           {},
-                  keys:           [],
-                  left_border:   "|",
-                  center_border: "|",
-                  right_border:  "|",
-                  cover:         " ",
-                  length:         10)
-    keys.empty? && !line.empty? &&
-      raise(ArgumentError.new('Empty param :keys in tabled_line'))
-    str = "\n"
-    str += left_border
-    keys.each_with_index do |key, index|
-      str +=  if line.key?(key) 
-              then line[key].to_s.center(length) 
-              else "".ljust(length, cover)
-              end
-      index == keys.length || str += center_border 
-    end
-    str += ""
-  end
+  def hat
+    str = @opts[:vertical_border]
 
-  def empty_line( left_border:   '|',
-                  center_border: '+',
-                  right_border:  '|',
-                  cover:         ' ',
-                  length:         10,
-                  times:           1)
-    str = "\n"
-    str += left_border
-    (times - 1).times { str += "".ljust(length, cover)
-                        str += center_border           }
-    str += "".ljust(length, cover)
+    # TODO: restruct this
+    str += @keys.map { |key|
+      key.to_s.center(key.length + 2).center(@opts[:cell_length])
+    }.join(@opts[:vertical_border])
+    # TODO: restruct this ^
     
-    str += right_border
-    str
+    str += @opts[:vertical_border] + "\n"
+  end
+
+  def to_s(vertical_border: '|', horizontal_border: '-', angle: '+')
+    # TODO: reverse these
+    @opts[:vertical_border  ] = vertical_border
+    @opts[:horizontal_border] = horizontal_border
+    @opts[:angle]             = angle
+    # TODO: reverse these ^
+    border_width = opts[:vertical_border  ].chomp.length
+    border_cover = opts[:horizontal_border]
+    get_keys_vals
+    set_cell_length
+
+    str = standard_empty_line + hat + standard_empty_line
+    @lines.each do |line|
+      str += standard_table_line(line)
+    end
+    str += standard_empty_line
+  end
+
+  def standard_table_line(line)
+    table_line(
+      line:          line,
+      keys:          @keys,
+      length:        @opts[:cell_length],
+      left_border:   @opts[:vertical_border],
+      center_border: @opts[:vertical_border],
+      right_border:  @opts[:vertical_border],
+    )
+  end
+  
+  def standard_empty_line
+    empty_line(
+      length:           @opts[:cell_length],
+      times:            @keys.length,
+      left_border:      @opts[:angle],
+      center_border:    @opts[:angle],
+      right_border:     @opts[:angle],
+      cover:            @opts[:horizontal_border]
+    )
   end
 end
