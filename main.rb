@@ -1,14 +1,21 @@
 #!/usr/bin/env ruby
+require_relative 'get_rbs'
+require 'rubyXL'
+require 'rubyXL/convenience_methods'
+get_rbs 'table', 'parser', from: 'program_files'
 
-##
-# Designed by A-18-21, MPEI, Russia.
-# Started 21 Jan 2021.
-# Barmaley makes data tables
+TEST_XLSX_FILE = "/home/gregory/Документы/prog/projects/"\
+                  "Barmaley/tests/ruby_xl_test.xlsx"
+TEST_TXT_FILE  = "/home/gregory/Документы/prog/projects/"\
+                  "Barmaley/tests/test.txt"
+workbook = RubyXL::Workbook.new
+sheet = workbook.worksheets[0]
+puts a = Table.new(Parser.new(TEST_TXT_FILE).hashes)
+a.keys.each_with_index { |key, i| sheet.add_cell(0, i, key) }
+a.lines.each_with_index do |line, i|
+  line.values.each_with_index do |value, j|
+    sheet.add_cell(i+1, j, value)
+  end
+end
 
-# 21 jan 2021
-  # // 24/01/2022 TODO: LiGM-GH: Table  in program_files/table.rb 
-# 24 jan 2021
-  # // 24/01/2022 TODO: LiGM-GH: Parser in program_files/parser.rb
-  # TODO: LiGM-GH: Parser in program_files/parser.rb - restructure
-  get_rbs 'table', 'parser', from: 'program_files'
-  
+workbook.write(TEST_XLSX_FILE)

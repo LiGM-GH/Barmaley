@@ -57,7 +57,7 @@ class Table
 
   def add(*args)
     counter = ''
-    args.each do |arg| 
+    args.flatten.each do |arg| 
       if arg.respond_to?(:each_pair)
         @lines << arg 
       else
@@ -86,11 +86,9 @@ class Table
   end
 
   def to_s(vertical_border: '|', horizontal_border: '-', angle: '+')
-    # TODO: reverse these
-    @opts[:vertical_border  ] = vertical_border
-    @opts[:horizontal_border] = horizontal_border
-    @opts[:angle]             = angle
-    # TODO: reverse these ^
+    @opts[:vertical_border  ] ||= vertical_border
+    @opts[:horizontal_border] ||= horizontal_border
+    @opts[:angle]             ||= angle
     border_width = opts[:vertical_border  ].chomp.length
     border_cover = opts[:horizontal_border]
     get_keys_vals

@@ -26,3 +26,7 @@ task :get_table_from => [:table, :parser] do
   end
   puts table
 end
+
+task :main do
+  get_rbs 'main'
+end
