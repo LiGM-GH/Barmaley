@@ -29,4 +29,14 @@ end
 
 task :main do
   get_rbs 'main'
+  workbook = RubyXL::Workbook.new
+  sheet = workbook.worksheets[0]
+  puts a = Table.new(Parser.new(TEST_FILES[:pas]).hashes)
+  a.lines.each_with_index do |line, i|
+    line.values.each_with_index do |value, j|
+      sheet.add_cell(i, j, value)
+    end
+  end
+
+  workbook.write(TEST_FILES[:xlsx])
 end

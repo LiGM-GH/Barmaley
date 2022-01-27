@@ -84,15 +84,15 @@ class Table
     get_keys_vals
     set_cell_length
     
-    str = standard_empty_line + hat + standard_empty_line
-    @lines.each do |line|
-      line.equal?(lines[0]) || str += standard_table_line(line)
+    str = hat
+    1.upto @lines.length - 1 do |i|
+      str += standard_table_line(@lines[i])
     end
     str += standard_empty_line
   end
 
   def hat
-    standard_table_line(@lines[0])
+    standard_empty_line + standard_table_line(@lines[0]) + standard_empty_line
   end
   
   def standard_table_line(line)

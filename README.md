@@ -6,7 +6,8 @@ and automatically makes columns.
  - Class Parser gets file or string and makes Hashes. 
  - `main.rb` is now history. 
 ## Usage
- - Place something like **this** in the lab file
+ - Run `bundle install` in repo directory to get all gems needed.
+ - Then, if all gems installed, place something like **this** in the lab file
 ```
 {
      Класс:      Промежуточные данные,
@@ -18,5 +19,5 @@ and automatically makes columns.
      Формат:     [5..600]
 }
 ```
- - Then run `rake parse_table_from #{your file}` in repo directory
+ - Then run `rake parse_table_from #{your file}` there
  - Then get your table in the terminal
