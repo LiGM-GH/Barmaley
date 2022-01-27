@@ -40,7 +40,7 @@ class Table
   attr_accessor :lines, :keys, :vals, :opts
   include TableUtils
   def initialize(*args, **opts)
-    @lines  = []
+    @lines  = [{}]
     @opts   = opts
     add(*args)
   end
@@ -65,6 +65,8 @@ class Table
       end
     end
     counter.empty? || raise(ArgumentError, "Not lines of table: #{counter}")
+    get_keys_vals
+    @lines[0] = @keys.map { |key| [key, key] }.to_h
   end
 
   def set_cell_length
@@ -72,19 +74,7 @@ class Table
     opts[:cell_length] = [@keys, @vals].flatten\
       .max_by { |sth| sth.to_s.length }.to_s.length
   end
-
-  def hat
-    str = @opts[:vertical_border]
-
-    # TODO: restruct this
-    str += @keys.map { |key|
-      key.to_s.center(key.length + 2).center(@opts[:cell_length])
-    }.join(@opts[:vertical_border])
-    # TODO: restruct this ^
-    
-    str += @opts[:vertical_border] + "\n"
-  end
-
+  
   def to_s(vertical_border: '|', horizontal_border: '-', angle: '+')
     @opts[:vertical_border  ] ||= vertical_border
     @opts[:horizontal_border] ||= horizontal_border
@@ -93,14 +83,18 @@ class Table
     border_cover = opts[:horizontal_border]
     get_keys_vals
     set_cell_length
-
+    
     str = standard_empty_line + hat + standard_empty_line
     @lines.each do |line|
-      str += standard_table_line(line)
+      line.equal?(lines[0]) || str += standard_table_line(line)
     end
     str += standard_empty_line
   end
 
+  def hat
+    standard_table_line(@lines[0])
+  end
+  
   def standard_table_line(line)
     table_line(
       line:          line,

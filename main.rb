@@ -11,10 +11,9 @@ TEST_TXT_FILE  = "/home/gregory/Документы/prog/projects/"\
 workbook = RubyXL::Workbook.new
 sheet = workbook.worksheets[0]
 puts a = Table.new(Parser.new(TEST_TXT_FILE).hashes)
-a.keys.each_with_index { |key, i| sheet.add_cell(0, i, key) }
 a.lines.each_with_index do |line, i|
   line.values.each_with_index do |value, j|
-    sheet.add_cell(i+1, j, value)
+    sheet.add_cell(i, j, value)
   end
 end
 
