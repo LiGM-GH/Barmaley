@@ -12,7 +12,6 @@ class Parser
       scanned = scanned.scan(descr_regex)
       scanned = scanned.map do |a| 
         elem = a.split(':').map { |b| b.strip }
-        # // elem[0] = elem[0].to_sym
         elem[1].delete_suffix!(',')
         elem[1].delete_suffix!('}')
         elem
@@ -39,7 +38,6 @@ class Parser
           hash = parse_hash(file.readline('}'))
           hash.empty? || hashes << hash
         rescue EOFError => error
-          # puts error.message
         end
       end
     end
