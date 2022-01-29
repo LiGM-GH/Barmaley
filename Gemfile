@@ -7,3 +7,4 @@ end
 
 gem 'rubyXL', '~> 3.4', '>= 3.4.20'
 gem 'rake'
+gem 'commander'

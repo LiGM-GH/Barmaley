@@ -10,9 +10,12 @@ a: integer {
 b: integer {
   Класс:
   Имя:
-  Смысл:
+  Смысл:   HelloWorld
   Тип:
   Структура:
   Диапазон:
   Формат:
 };
+
+c: integer // in: c - int[0-5](SV)"num": meaning
+

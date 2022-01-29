@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    commander (4.6.0)
+      highline (~> 2.0.0)
+    highline (2.0.3)
     nokogiri (1.13.1-x86_64-linux)
       racc (~> 1.4)
     racc (1.6.0)
@@ -14,6 +17,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  commander
   rake
   rubyXL (~> 3.4, >= 3.4.20)
 
