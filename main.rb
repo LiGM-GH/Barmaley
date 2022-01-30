@@ -46,25 +46,35 @@ command :parse do |c|
   begin: coding
   do: end"
   c.option '--to FILE', String, 'Print table to FILE'
-  c.option '--as TYPE', String, 'Print table in format "TXT" or "XLSX"(default)'
   c.action do |args, options|
     options.default to: nil, as: nil
     options.to.nil? && raise(ArgumentError, "'--to' empty. What file should I write to? ")
-    File.extname(options.to) == ".xlsx" || raise(ArgumentError, "'--to' is not XLSX, it's #{File.extname(options.to)}")
-    options.as ||= "XLSX"
-    args.each do |arg|
-      if File.exist?(arg)
-        workbook = RubyXL::Workbook.new
-        sheet = workbook.worksheets[0]
-        puts a = Table.new(Parser.new(arg).hashes)
-        a.lines.each_with_index do |line, i|
-          line.values.each_with_index do |value, j|
-            sheet.add_cell(i, j, value)
+    if File.extname(options.to) == ".xlsx"
+      workbook = 0
+      args.each do |arg|
+        if File.exist?(arg)
+          workbook = RubyXL::Workbook.new
+          sheet = workbook.worksheets[0]
+          puts a = Table.new(Parser.new(arg).hashes)
+          a.lines.each_with_index do |line, i|
+            line.values.each_with_index do |value, j|
+              sheet.add_cell(i, j, value)
+            end
+          end
+        else raise(ArgumentError, "File #{arg} does not exist")
+        end
+      end
+      workbook.write(options.to)
+    elsif File.extname(options.to) == '.txt'
+      args.each do |arg|
+        if File.exist?(arg)
+          hashes = Parser.new(arg).hashes
+          File.open(options.to, 'a') do |file|
+            file.puts(Table.new(hashes))
           end
         end
-        workbook.write(options.to)
-      else raise(ArgumentError, "File #{arg} does not exist")
       end
+    else raise(ArgumentError, "'--to' is not XLSX or TXT, it's #{File.extname(options.to)}")
     end
   end
 end
