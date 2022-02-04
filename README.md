@@ -19,5 +19,5 @@ and automatically makes columns.
      Формат:     [5..600]
 }
 ```
- - Then run `rake parse_table_from #{your file}` there
+ - Then run `./main.rb parse #{input file} --to #{output TXT/XLSX (existance not nesessary)}` there
  - Then get your table in the terminal
