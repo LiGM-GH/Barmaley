@@ -5,7 +5,7 @@ require_relative 'get_rbs'
 require 'commander/import'
 require 'rubyXL'
 require 'rubyXL/convenience_methods'
-get_rbs 'table', 'parser', from: 'program_files'
+get_rbs 'table', 'parser', 'shortcut_parser', from: 'program_files'
 
 TEST_FILES = {
   txt: './tests/test.txt',
@@ -73,7 +73,7 @@ command :parse do |c|
   c.syntax = './main.rb parse FILE'
   c.summary = 'Finds tables in FILE'
   c.description = "Finds tables like \nhello: world\nbegin: coding\ndo: end"
-  c.option '--to FILE', String, 'Print table to FILE'
+  c.option '--to FILE', String, 'Print table to FILE', default: nil
   c.action do |args, options|
     options.default to: nil, as: nil
     options.to.nil? && raise(ArgumentError, "'--to' empty. What file should I write to? ")
@@ -82,6 +82,20 @@ command :parse do |c|
     when 'txt'   then parse_to_txt(*args,  to: options.to)
     else
       raise(ArgumentError, "'--to' is not XLSX or TXT, it's #{File.extname(options.to)}")
+    end
+  end
+end
+
+command :shortcut_parse do |c|
+  c.syntax = './main.rb shortcut_parse FILE'
+  c.summary = 'Parses files to get tables with a shortcut'
+  c.description = "'Class-Name-Meaning-Type-Structure-Diapazone-Format' tables are parced when given as: c name:t[diapazone](s)\"format\""
+  c.option '--to FILE', String, 'Print table to FILE'
+  c.action do |_args, options|
+    File.open(options.to) do |file|
+      table = ShortcutParser.shortcut_parse(file.read)
+      
+      table_to_sheet(Table.new(table), sheet)
     end
   end
 end
