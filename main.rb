@@ -5,44 +5,14 @@ require_relative 'get_rbs'
 require 'commander/import'
 require 'rubyXL'
 require 'rubyXL/convenience_methods'
-get_rbs 'table', 'parser', 'shortcut_parser', from: 'program_files'
+get_rbs 'table', 'parser', 'shortcut_parser', 'comment_parser', 'main_module',
+        from: 'program_files'
 
 TEST_FILES = {
   txt: './tests/test.txt',
   pas: './tests/test.pas',
   xlsx: './tests/test.xlsx'
 }.freeze
-
-def parse_table(file)
-  Table.new(Parser.new(file).hashes)
-end
-
-def table_to_sheet(table, sheet)
-  table.each_cell do |value, i, j|
-    sheet.add_cell(i, j, value)
-  end
-end
-
-def parse_to_xlsx(*args, to:)
-  workbook = 0
-  args.each do |arg|
-    File.exist?(arg) || raise(ArgumentError, "File #{arg} does not exist")
-    workbook = RubyXL::Workbook.new
-    table_to_sheet(parse_table(arg), workbook.worksheets[0])
-  end
-  workbook.write(to)
-end
-
-def parse_to_txt(*args, to:)
-  args.each do |arg|
-    next unless File.exist?(arg)
-
-    hashes = Parser.new(arg).hashes
-    File.open(to, 'a') do |file|
-      file.puts(Table.new(hashes))
-    end
-  end
-end
 
 ##
 # CLI
@@ -78,24 +48,37 @@ command :parse do |c|
     options.default to: nil, as: nil
     options.to.nil? && raise(ArgumentError, "'--to' empty. What file should I write to? ")
     case File.extname(options.to)
-    when '.xlsx' then parse_to_xlsx(*args, to: options.to)
-    when 'txt'   then parse_to_txt(*args,  to: options.to)
+    when '.xlsx' then Parser.parse_to_xlsx(*args, to: options.to)
+    when 'txt'   then Parser.parse_to_txt(*args,  to: options.to)
     else
       raise(ArgumentError, "'--to' is not XLSX or TXT, it's #{File.extname(options.to)}")
     end
   end
 end
 
-command :shortcut_parse do |c|
-  c.syntax = './main.rb shortcut_parse FILE'
-  c.summary = 'Parses files to get tables with a shortcut'
-  c.description = "'Class-Name-Meaning-Type-Structure-Diapazone-Format' tables are parced when given as: c name:t[diapazone](s)\"format\""
+command :shortparse do |c|
+  c.syntax = './main.rb shortparse FILE'
+  c.summary = 'Parses files to get tables with shortcuts'
+  c.description = "'Class-Name-Meaning-Type-Structure-Diapazone-Format'"\
+  ' tables are parced when given as: c name:t[diapazone](s)"format"'
   c.option '--to FILE', String, 'Print table to FILE'
-  c.action do |_args, options|
-    File.open(options.to) do |file|
-      table = ShortcutParser.shortcut_parse(file.read)
-      
-      table_to_sheet(Table.new(table), sheet)
+  c.action do |args, options|
+    options.to.nil? && raise(ArgumentError, '--to not specified')
+    file = args[0]
+    if file.nil?
+      file = './tests/test.py'
+      puts "File not specified, running test file #{file}"
+      sleep 1
     end
+    workbook = RubyXL::Workbook.new
+    table = Table.new
+    sheet = workbook[0]
+
+    Parser.parse_comments(file).each do |line|
+      table.add(Parser.shortcut_parse(line))
+    end
+    puts table
+    Parser.table_to_sheet(table, sheet)
+    workbook.write(options.to)
   end
 end

@@ -18,3 +18,6 @@ begin
   b := 5;
   WriteLn(a, b);
 end.
+// Some comments in the code
+
+// Some comments from Barmaley
