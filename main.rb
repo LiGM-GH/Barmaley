@@ -62,14 +62,15 @@ command :shortparse do |c|
   c.description = "'Class-Name-Meaning-Type-Structure-Diapazone-Format'"\
   ' tables are parced when given as: c name:t[diapazone](s)"format"'
   c.option '--to FILE', String, 'Print table to FILE'
+  c.option '--silent', 'Asks for silence', default: false
   c.action do |args, options|
-    options.to.nil? && raise(ArgumentError, '--to not specified')
     file = args[0]
     if file.nil?
       file = './tests/test.py'
       puts "File not specified, running test file #{file}"
       sleep 1
     end
+    options.to ||= "#{File.dirname(file)}/#{File.basename(file, '.*')}.xlsx"
     workbook = RubyXL::Workbook.new
     table = Table.new
     sheet = workbook[0]
@@ -77,7 +78,7 @@ command :shortparse do |c|
     Parser.parse_comments(file).each do |line|
       table.add(Parser.shortcut_parse(line))
     end
-    puts table
+    puts table unless options.silent
     Parser.table_to_sheet(table, sheet)
     workbook.write(options.to)
   end

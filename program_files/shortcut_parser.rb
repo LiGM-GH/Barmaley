@@ -37,30 +37,35 @@ module ShortcutParser
 
   def shortcut_parse(string)
     name_pos = 2
-    descr_regex = /[iom] [a-zA-Z_]+:\ *[bifcsamv]\[[\d\-]+\]\([sam]\)".+":.+/
+    descr_regex = /[iom] [a-zA-Z0-9_]+:\ *[bifcsamv]\[[\d\-]+\]\([sam]\)".*":.+/
     map = string.scan(descr_regex).map do |el|
       hash = {}
       hash[:class] = CLASS_SHORTCUTS[el[0].to_sym]
-      hash[:name]  = (
-        el[name_pos,
-           el.index(':') - name_pos]
-      )
+      hash[:name]  = el[
+        name_pos,
+        el.index(':') - name_pos
+      ]
       hash[:type] = TYPE_SHORTCUTS[
         el[el.index('[') - 1].to_sym
       ]
       hash[:structure] = STRUCTURE_SHORTCUTS[
-        el[el.index('(') + 1,
-           el.index(')') - el.index('(') - 1].to_sym
+        el[
+          el.index('(') + 1,
+          el.index(')') - el.index('(') - 1
+        ].to_sym
       ]
-      hash[:diapazone] = (
-        el[el.index('[') + 1,
-           el.index(']') - el.index('[') - 1]
-      )
-      hash[:format] = (
-        el[el.index('"') + 1,
-           el.index('"', el.index('"') + 1) - el.index('"') - 1]
-      )
-      hash[:meaning] = el[el.index(':', el.index(':') + 1) + 2, el.length - 1]
+      hash[:diapazone] = el[
+        el.index('[') + 1,
+        el.index(']') - el.index('[') - 1
+      ]
+      hash[:format] = el[
+        el.index('"') + 1,
+        el.index('"', el.index('"') + 1) - el.index('"') - 1
+      ]
+      hash[:meaning] = el[
+        el.index(':', el.index(':') + 1) + 2, 
+        el.length - 1
+      ].strip
       hash
     end
     map.empty? && puts("Retry writing this: #{string}, form it like #{descr_regex}")

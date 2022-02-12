@@ -9,9 +9,7 @@ module MainModule
   end
 
   def table_to_sheet(table, sheet)
-    table.each_cell do |value, i, j|
-      sheet.add_cell(i, j, value)
-    end
+    table.each_cell { |value, i, j| sheet.add_cell(i, j, value) }
   end
 
   def parse_to_xlsx(*args, to:)
