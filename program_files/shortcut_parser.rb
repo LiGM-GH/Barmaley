@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'parser'
 ##
 # ShortcutParser is needed to get tables like
 #   class:      (...),
@@ -10,7 +11,6 @@
 #   diapazone:  (...),
 #   format:     (...)
 # written like 'c n:t[d](s)"f": a really long meaning'
-require_relative 'parser'
 module ShortcutParser
   TYPE_SHORTCUTS = {
     'b': 'boolean',
@@ -32,12 +32,13 @@ module ShortcutParser
   STRUCTURE_SHORTCUTS = {
     's': 'Простая переменная',        # 'simple variable',
     'a': 'Массив',                    # 'array',
-    'm': 'Матрица'                    # 'matrix'
+    'm': 'Матрица',                   # 'matrix',
+    'p': 'Указатель'                  # 'pointer'
   }.freeze
 
   def shortcut_parse(string)
     name_pos = 2
-    descr_regex = /[iom] [a-zA-Z0-9_]+:\ *[bifcsamv]\[[\d\-]+\]\([sam]\)".*":.+/
+    descr_regex = /[iom] [a-zA-Z0-9_]+:\ *[bifcsamv]\[[\d\-]+\]\([samp]\)".*":.+/
     map = string.scan(descr_regex).map do |el|
       hash = {}
       hash[:class] = CLASS_SHORTCUTS[el[0].to_sym]
