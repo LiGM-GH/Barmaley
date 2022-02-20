@@ -39,7 +39,7 @@ module ShortcutParser
 
   def shortcut_parse(string)
     name_pos = 2
-    descr_regex = /[iom] [a-zA-Z0-9_]+:\ *[bifcsamv]\[[\d\-]+\]\([samp]\)".*":.+/
+    descr_regex = /[iom] [a-zA-Z0-9_]+:\ *[bifcsamv]\[[\d\-]+\]\([svamp]\)".*":.+/
     map = string.scan(descr_regex).map do |el|
       hash = {}
       hash[:class] = CLASS_SHORTCUTS[el[0].to_sym]
