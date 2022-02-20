@@ -33,7 +33,8 @@ module ShortcutParser
     's': 'Простая переменная',        # 'simple variable',
     'a': 'Массив',                    # 'array',
     'm': 'Матрица',                   # 'matrix',
-    'p': 'Указатель'                  # 'pointer'
+    'p': 'Указатель',                 # 'pointer'
+    'v': 'Сложная структура'          # 'complex variable'
   }.freeze
 
   def shortcut_parse(string)
