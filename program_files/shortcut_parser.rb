@@ -38,40 +38,69 @@ module ShortcutParser
   }.freeze
 
   def shortcut_parse(string)
-    name_pos = 2
-    descr_regex = /[iom] [a-zA-Z0-9_]+:\ *[bifcsamv]\[[\d\-]+\]\([svamp]\)".*":.+/
     map = string.scan(descr_regex).map do |el|
-      hash = {}
-      hash[:class] = CLASS_SHORTCUTS[el[0].to_sym]
-      hash[:name]  = el[
-        name_pos,
-        el.index(':') - name_pos
-      ]
-      hash[:type] = TYPE_SHORTCUTS[
-        el[el.index('[') - 1].to_sym
-      ]
-      hash[:structure] = STRUCTURE_SHORTCUTS[
-        el[
-          el.index('(') + 1,
-          el.index(')') - el.index('(') - 1
-        ].to_sym
-      ]
-      hash[:diapazone] = el[
-        el.index('[') + 1,
-        el.index(']') - el.index('[') - 1
-      ]
-      hash[:format] = el[
-        el.index('"') + 1,
-        el.index('"', el.index('"') + 1) - el.index('"') - 1
-      ]
-      hash[:meaning] = el[
-        el.index(':', el.index(':') + 1) + 2, 
-        el.length - 1
-      ].strip
-      hash
+      %i[class name type structure diapazone format meaning].map do |data|
+        [data, send("parse_#{data}", el)]
+      end.to_h
     end
-    map.empty? && puts("Retry writing this: #{string}, form it like #{descr_regex}")
+    if map.empty?
+      puts("Retry writing \"#{string}\", "\
+            "form it like #{descr_regex}")
+    end
     map
+  end
+
+  def descr_regex
+    @descr_regex ||= Regexp.compile(
+      "[#{CLASS_SHORTCUTS.keys.join}] [a-zA-Z0-9_]+:\\ *"\
+      "[#{TYPE_SHORTCUTS.keys.join}]\\[[\\d\-]+\\]\\("\
+      "[#{STRUCTURE_SHORTCUTS.keys.join}]\\)\".*\":.+"
+    )
+  end
+
+  def parse_class(el)
+    CLASS_SHORTCUTS[el[0].to_sym]
+  end
+
+  def parse_name(str)
+    name_pos = 2
+    str[name_pos, str.index(':') - name_pos]
+  end
+
+  def parse_type(str)
+    TYPE_SHORTCUTS[
+      str[str.index('[') - 1].to_sym
+    ]
+  end
+
+  def parse_structure(str)
+    STRUCTURE_SHORTCUTS[
+        str[
+        str.index('(') + 1,
+        str.index(')') - str.index('(') - 1
+      ].to_sym
+    ]
+  end
+
+  def parse_diapazone(str)
+    str[
+      str.index('[') + 1,
+      str.index(']') - str.index('[') - 1
+    ]
+  end
+
+  def parse_format(str)
+    str[
+      str.index('"') + 1,
+      str.index('"', str.index('"') + 1) - str.index('"') - 1
+    ]
+  end
+
+  def parse_meaning(str)
+    str[
+      str.index(':', str.index(':') + 1) + 2,
+      str.length - 1
+    ].strip
   end
 
   def name(string)
